@@ -1,4 +1,4 @@
-package Lab8
+/*package Lab8
 
 import com.cra.figaro.algorithm.factored.VariableElimination
 import com.cra.figaro.language._
@@ -91,4 +91,4 @@ object Ex1 {
   print(VariableElimination.probability(research_dev.state, "average"))
   print(VariableElimination.probability(finances.state, "poor"))
   print(VariableElimination.probability(firm.state, "poor"))
-}
+}*/
