@@ -3,8 +3,9 @@ package Lab10
 import com.cra.figaro.algorithm.factored.VariableElimination
 import com.cra.figaro.language._
 import com.cra.figaro.algorithm.sampling._
+import com.cra.figaro.library.compound.^^
 
-object Ex1 {
+object Ex1Varianta2 {
   def main(args: Array[String]) {
 
     val length = 11
@@ -16,20 +17,14 @@ object Ex1 {
 
     //valoarea initiala pentru capital
     capitalV(0) = Constant(1000)
-    //investia reprezinta 33% din capital
-    for {capital <- 0 until length} {
-      investmentV(capital) = Apply(capitalV(capital), (i: Int) => i * (1 / 3))
-    }
 
+    //investia reprezinta 20% din capital
     //profitul care se schimba in functia de valoarea investitiilor
-    for {investment <- 0 until length} {
-      profitV(investment) = Apply(investmentV(investment), (i: Int) => i + i * (1 / 6))
-
-    }
-
-    for {step <- 1 until length} {
-      capitalV(step) = Apply(capitalV(step - 1), investmentV(step), profitV(step), (i: Int, inv: Int, prof: Int) => i + i + prof - inv)
-
+    def transition(capital: Element[Int]): (Element[(Int, Int, Int)]) = {
+      val newInvestment: Element[Int] = Apply(capital, (i: Int) => i * (1 / 5))
+      val newProfit: Element[Int] = Apply(capital, (i: Int) => i + i * (1 / 6))
+      val newCapital: Element[Int] = Apply(capital, newInvestment, newProfit, (i: Int, new_inv: Int, new_prof: Int) => i + i + new_prof - new_inv)
+      ^^(newInvestment, newProfit, newCapital)
     }
 
     //verificam daca este mai mare decat valoarea initiala

@@ -9,7 +9,7 @@ object Ex1 {
 
 		val algorithm = Importance(1000, test)
 		algorithm.start()
-		
+
 		println(algorithm.probability(test, "Test"))
 	}
 }
