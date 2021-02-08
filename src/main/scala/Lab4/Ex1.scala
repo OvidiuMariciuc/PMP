@@ -8,6 +8,20 @@ import com.cra.figaro.library.compound.^^
 
 object Ex1 {
   def main(args: Array[String]) {
+    //Exercise 3
+
+    val x1 = Flip(0.4)
+    val y1 = Flip(0.4)
+    val z1 = x1
+    val w1 = x1 === z1
+    println(VariableElimination.probability(w1, true))
+
+    val x2 = Flip(0.4)
+    val y2 = Flip(0.4)
+    val z2 = y2
+    val w2 = x2 === z2
+    println(VariableElimination.probability(w2, true))
+
     //Exercise 4 - afiseaza 0.05555555555555555
     val die1 = FromRange(1, 7)
     val die2 = FromRange(1, 7)

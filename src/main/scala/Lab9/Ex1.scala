@@ -77,8 +77,8 @@ object Ex1 {
 
     //studentul a trecut primele 3 teste, adica a avut note >=5 la toate cele 3 testele
     tPassed(0).observe(true)
-    tPassed(0).observe(true)
-    tPassed(0).observe(true)
+    tPassed(1).observe(true)
+    tPassed(2).observe(true)
     //verificam daca studentul a trecut ultimul test stiind ca le-a trecut pe primele 3
     println(VariableElimination.probability(tPassed(9), true))
 

@@ -2,89 +2,71 @@ package Partial2
 
 import com.cra.figaro.algorithm.factored.VariableElimination
 import com.cra.figaro.language.{Constant, Element, Flip, Select}
-import com.cra.figaro.library.compound.{CPD, OneOf, RichCPD}
+import com.cra.figaro.library.compound.{CPD, If, RichCPD}
 
 object Ex {
 
-  //Partial 2 - Model Markov askuns
-  // descrierea modelului
-  //clasa Weather
-  class Weather(state_weather: Element[String]) {
-    val state: Element[String] = state_weather
+  class WeatherChange(p1: Double, p2: Double, p3: Double) {
+    var state: Element[String] = Select(p1 -> "insorit", p2 -> "ploios", p3 -> "innorat")
   }
 
-  //clasa takeUmbrela
-  class takeUmbrela(umbrela: Element[Boolean]) {
-    val take_umbrela: Element[Boolean] = umbrela
+  class TakeUmbrela(p: Double) {
+    var state: Element[Boolean] = Flip(p)
   }
 
-  //functia main a programului principal
-  def main(args: Array[String]): Unit = {
-    //lungimea vectorilor
-    val length = 20
+  def main(args: Array[String]) {
 
-    //variabila pentru vreme
-    //starea initiala a vremii (Start)
-    val weather = Select(0.5 -> "insorit", 0.2 -> "ploios", 0.3 -> "innorat")
-    val weatherCatalog: Array[Weather] = Array.fill(length)(new Weather(weather))
-    //initializarea vremii - starea 0
-    weatherCatalog(0) = new Weather(weather)
+    val length = 10
 
+    val weatherStart = new WeatherChange(0.5, 0.2, 0.3)
+    val takeU = new TakeUmbrela(0)
 
-    //variabila pentru take_umbrela
-    //initial sansa sa luam umbrela este de 0%
-    val take_umbrela = Flip(0)
-    val umbrela: Array[takeUmbrela] = Array.fill(length)(new takeUmbrela(take_umbrela))
+    val hoursW: Array[WeatherChange] =
+      Array.fill(length)(weatherStart)
 
-    //schimbarea vremii in functie de vremea anterioara (folosind stiute prob. din enunt)
-    //parcurgem fiecare ora si actualizam vremea in functie de vremea anterioara
+    val takeUmb: Array[TakeUmbrela] =
+      Array.fill(length)(takeU)
+
     for {hour <- 1 until length} {
-      val vreme = CPD(weather(hour - 1).state,
+      hoursW(hour) = new WeatherChange(0.3, 0.3, 0.4)
+      val st = CPD(hoursW(hour - 1).state,
         "insorit" -> Select(0.6 -> "insorit", 0.1 -> "ploios", 0.3 -> "innorat"),
         "ploios" -> Select(0.15 -> "insorit", 0.45 -> "ploios", 0.4 -> "innorat"),
         "innorat" -> Select(0.15 -> "insorit", 0.35 -> "ploios", 0.5 -> "innorat")
       )
-      //actualizam noua vreme
-      weather(hour) = new Weather(vreme)
+      hoursW(hour).state = st
+
     }
 
-    //luarea deciziei de a lua umbrela in functie de vremea curenta(folosind stiute prob. din enunt)
-    //parcurgem fiecare ora si actualizam decizia daca sa luam umbrela sau nu
     for {hour <- 0 until length} {
-      val take_umbrela = CPD(weather(hour).state,
+
+      takeUmb(hour) = new TakeUmbrela(0.3)
+      val st = CPD(hoursW(hour).state,
         "insorit" -> Flip(0.15),
-        "ploios" -> Flip(0.75),
-        "innorat" -> Flip(0.65)
+        "ploios" -> Flip(0.65),
+        "innorat" -> Flip(0.75)
       )
-      //actualizam noua decizie
-      take_umbrela(hour) = new takeUmbrela(take_umbrela)
+      takeUmb(hour).state = st
 
     }
 
-    //monitorizarea vremii + afisari + rezultate (interogari)
 
-    //subpct a
-    //monitorizam vremea pe o perioada de 5 ore afisand ora urmata de actiunea de a lua umbrela sau nu
     for {hour <- 0 until 5} {
-      println("Probabilitate ca voi lua umbrela la ora-" + hour + "este -> "
-        + VariableElimination.probability(umbrela(hour).take_umbrela, true))
+
+      println("O monitorizare pentru o perioadă de 5 ore: " + VariableElimination.probability(takeUmb(hour).state, true))
+
     }
 
-    //subpct b
-    //observam ca la orele 4 si 5 vremea a fost innorata
-    weatherCatalog(4).state.observe("innorat")
-    weatherCatalog(5).state.observe("innorat")
-    //afisam rezultatul vremii pentru de la ora 6
-    println("Probabilitate sa iau umbrela la ora 6 -> "
-      + VariableElimination.probability(umbrela(6).take_umbrela, true))
+    hoursW(4).state.observe("innorat")
+    hoursW(5).state.observe("innorat")
+    println("Iau umbrela?:" + VariableElimination.probability(takeUmb(6).state, true))
+    hoursW(4).state.unobserve()
+    hoursW(5).state.unobserve()
 
-    //subpct c
-    //observam ca la ora 5 umbrela nu a fost luata
-    umbrela(5).take_umbrela.observe(false)
-    //afisam probabilitatea ca acum 3 ore sa fi plouat adica ca vreme = "ploios"
-    println("Probabilitate sa fi plouat acum 3 ore ->"
-      + VariableElimination.probability(weatherCatalog(3).state, "ploios"))
-
+    takeUmb(5).state.observe(true)
+    println("A plouat?:" + VariableElimination.probability(hoursW(2).state, "ploios"))
 
   }
 }
+
+

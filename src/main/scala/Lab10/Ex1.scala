@@ -28,7 +28,7 @@ object Ex1 {
     }
 
     for {step <- 1 until length} {
-      capitalV(step) = Apply(capitalV(step - 1), investmentV(step), profitV(step), (i: Int, inv: Int, prof: Int) => i + i + prof - inv)
+      capitalV(step) = Apply(capitalV(step - 1), investmentV(step), profitV(step), (i: Int, inv: Int, prof: Int) => i + prof - inv)
 
     }
 
