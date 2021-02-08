@@ -31,12 +31,14 @@ object ex1 {
 
     val length = 10 //10 saptamani
     //vom genera 10 calitati pentru 10 saptamani diferite
+    //cu week_qual parcurgem fiecare saptamana pe rand
     for {week_qual <- 1 until length} {
       println("Calitatea saptamanii:" + week_quality(week_qual))
     }
 
-    //normala va aparea mai des deoarece este probabilitatea mai mare sa fie o zi normala(3 zile cu ninsoare)
-    //decat sa fie o zi cu prea multa sau prea putina ninsoare(2 zile cu ninsoare pentru fiecare)
+    //observam ca o saptamana normala apare mai des decat celelalte 2 tipuri de saptamani
+    //normala va aparea mai des deoarece este probabilitatea mai mare sa fie o saptamana normala(3 zile cu ninsoare)
+    //decat sa fie o saptamana cu prea multa sau prea putina ninsoare(2 zile cu ninsoare pentru fiecare)
 
 
   }

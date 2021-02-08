@@ -23,6 +23,7 @@ object ex2 {
     //verificam daca temp se afla intre 20 si 50 de grade
     def greaterBetween20and50(d: Double) = d > 50 && d < 20
 
+    //folosim importance deoarece lucram cu valori continue (nu discrete)
     println(Importance.probability(temperature, greaterBetween20and50 _))
 
     //marcam ca temperatura medie este 9
