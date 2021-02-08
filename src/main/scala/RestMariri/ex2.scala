@@ -2,7 +2,7 @@ package RestMariri
 
 import com.cra.figaro.algorithm.sampling.Importance
 import com.cra.figaro.experimental.normalproposals.Normal
-import com.cra.figaro.language.Select
+import com.cra.figaro.language.{Dist, Select}
 
 object ex2 {
 
@@ -31,6 +31,8 @@ object ex2 {
     println(Importance.probability(temperature, greaterBetween20and50 _))
     //demarcam observarea pentru a nu influenta celalalte interogari
     avg_temperature.unobserve()
+
+    //observam ca a crescut valoarea
 
 
   }

@@ -1,7 +1,7 @@
 package RestMariri
 
 import com.cra.figaro.algorithm.factored.VariableElimination
-import com.cra.figaro.language.Flip
+import com.cra.figaro.language.{Constant, Flip}
 import com.cra.figaro.library.atomic.discrete.Binomial
 import com.cra.figaro.library.compound.{CPD, OneOf, RichCPD}
 
@@ -19,9 +19,9 @@ object ex1 {
 
     //calitatea saptamanii care este data in functie de val week adica in functie de numarul de zile in care a nins
     val week_quality = RichCPD(week,
-      (OneOf(6, 7)) -> "prea multa ninsoare",
-      (OneOf(1, 2)) -> "prea putina ninsoare",
-      (OneOf(3, 4, 5)) -> "normala"
+      (OneOf(6, 7)) -> Constant("prea multa ninsoare"),
+      (OneOf(1, 2)) -> Constant("prea multa ninsoare"),
+      (OneOf(3, 4, 5)) -> Constant("prea multa ninsoare")
     )
 
     //punctul B
@@ -33,7 +33,7 @@ object ex1 {
     //vom genera 10 calitati pentru 10 saptamani diferite
     //cu week_qual parcurgem fiecare saptamana pe rand
     for {week_qual <- 1 until length} {
-      println("Calitatea saptamanii:" + week_quality(week_qual))
+      //println("Calitatea saptamanii:" + week_quality(week_qual))
     }
 
     //observam ca o saptamana normala apare mai des decat celelalte 2 tipuri de saptamani
